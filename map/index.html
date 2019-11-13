@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+        <meta charset="utf8">
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+            }
+
+            .map {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/pa7/heatmap.js@master/build/heatmap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/pa7/heatmap.js@master/plugins/leaflet-heatmap/leaflet-heatmap.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/Leaflet/Leaflet.heat@gh-pages/dist/leaflet-heat.js"></script>
+        <title>TrashApp Map</title>
+    </head>
+    <body>
+        <div id="map" class="map"></div>
+        <script type="text/javascript">
+            let currentLocation=new L.LatLng(0, 0);
+            let radius = 0.2;
+
+
+            let selfMarker = new L.Marker([0,0],{
+                icon:L.icon({
+                    iconUrl:"img/self_marker_24px.svg"
+                })
+            });
+
+            let map  = new L.Map('map',{
+            });
+            let osm = new L.TileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+                minZoom: 5,
+                maxZoom: 19,
+                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'});
+            map.addLayer(osm);
+
+
+            let initialZoomComplete = false;
+            function gotLocation(location) {
+                currentLocation = new L.LatLng(location.coords.latitude, location.coords.longitude);
+
+                console.log("Got Location: ");
+                console.log(location);
+
+                selfMarker.setLatLng(currentLocation);
+
+                if (!initialZoomComplete) {
+                    map.setView(currentLocation, 14);
+                    map.addLayer(selfMarker);
+                    initialZoomComplete = true;
+
+                    fetchTrashcans();
+                    map.addLayer(trashcanLayers);
+                }
+            }
+
+            let trashIcon = L.icon({
+                iconUrl:"img/marker_trash-x32.png"
+            });
+            let trashcanLayers = L.markerClusterGroup();
+
+            let heatmap = L.heatLayer([]);
+
+            L.control.layers({
+                "Markers":trashcanLayers,
+                "Heatmap":heatmap
+            }).addTo(map);
+
+            function fetchTrashcans() {
+                fetch("https://raw.githubusercontent.com/InventivetalentDev/TrashApp/master/trashapp_common/src/main/res/raw/waste_basket_query.oql").then(function (response) {
+                    return response.text()
+                }).then(function (query) {
+                    query = query.replace("{{bbox}}",
+                        (currentLocation.lat - radius) + "," + (currentLocation.lng - radius) + "," + (currentLocation.lat + radius) + "," + (currentLocation.lng + radius));
+                    console.log(query);
+
+                    fetch("https://overpass-api.de/api/interpreter", {
+                        method: "post",
+                        body: query
+                    }).then(function (response) {
+                        return response.json();
+                    }).then(function (json) {
+                        console.log(json);
+                        let elements = json.elements/*.filter(function (el) {
+                            return el.lat && el.lon;
+                        })*/;
+
+
+                        for (let i = 0; i < elements.length; i++) {
+                            let el = elements[i];
+
+                            if (!el.lat || !el.lon) {
+                                continue;
+                            }
+                            el.count = 1;
+
+                            let coord = new L.LatLng(el.lat, el.lon);
+                            let marker = new L.Marker(coord,{
+                                icon:trashIcon
+                            });
+                            trashcanLayers.addLayer(marker);
+                            heatmap.addLatLng(coord);
+
+                        }
+
+                        if (!heatmap) {
+                            // heatmap = new HeatmapOverlay({
+                            //     radius: 0.005,
+                            //     maxOpacity: 8,
+                            //     scaleRadius: true,
+                            //     useLocalExtrema: false,
+                            //     latField: "lat",
+                            //     lngField: "lon",
+                            //     valueField: "count"
+                            // });
+
+                        }
+                        // heatmap.setData({
+                        //     data:elements
+                        // });
+
+
+                    })
+                })
+            }
+
+            $(document).ready(function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (loc, err) {
+                        if (!err) {
+                            gotLocation(loc);
+                            navigator.geolocation.watchPosition(gotLocation);// Start watching location
+                        } else {
+                            console.warn(err);
+                        }
+                    });// Get initial location
+                } else {
+                    console.warn("GeoLocation not supported");
+                }
+
+
+            })
+        </script>
+    </body>
+</html>
