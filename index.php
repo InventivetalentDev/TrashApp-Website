@@ -116,7 +116,17 @@
              <!-- TODO -->
 
              <div>
-                 <a href='https://play.google.com/store/apps/details?id=org.inventivetalent.trashapp&utm_source=TrashAppWebsite&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+                 <?php
+                 $referrer = "utm_source=TrashAppWebsite";
+                 if(isset($_GET["utm_medium"])){
+                     $referrer.="&utm_medium=".$_GET["utm_medium"];
+                 }
+                 if (isset($_GET["utm_campaign"])) {
+                     $referrer.="&utm_campaign=".$_GET["utm_campaign"];
+                 }
+                 $referrer = urlencode($referrer);
+                 ?>
+                 <a href='https://play.google.com/store/apps/details?id=org.inventivetalent.trashapp&utm_source=TrashAppWebsite&referrer=<?php echo $referrer; ?>'>
                      <img class="store-button" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/>
                  </a>
                  <br/>
