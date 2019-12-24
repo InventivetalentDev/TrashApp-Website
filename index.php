@@ -56,26 +56,27 @@
                 overflow-y: auto;
             }
 
-            .drop-shadow{
+            .drop-shadow {
                 text-shadow: 0px 0px 8px black;
             }
 
-            .disclaimer{
+            .disclaimer {
                 font-size: 1.5rem;
             }
 
-            .store-button{
+            .store-button {
                 width: 50vh;
             }
 
-            footer{
+            footer {
                 font-size: 2rem;
                 position: absolute;
                 /*left: 10px;*/
                 bottom: 10px;
-                width:100%;
+                width: 100%;
             }
-            footer a{
+
+            footer a {
                 text-decoration: none;
                 color: #1a1fbb;
             }
@@ -99,43 +100,43 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-<br/>
         <br/>
-     <main>
-         <div class="container">
-             <h1 class="drop-shadow">TrashApp</h1>
+        <br/>
+        <main>
+            <div class="container">
+                <h1 class="drop-shadow">TrashApp</h1>
 
-             <br/>
+                <br/>
 
-             <h2 class="drop-shadow">Find Nearby Trashcans<br/>
-                 Stop Polluting Nature</h2>
+                <h2 class="drop-shadow">Find Nearby Trashcans<br/>
+                    Stop Polluting Nature</h2>
 
-             <br/>
-             <br/>
+                <br/>
+                <br/>
 
-             <!-- TODO -->
+                <!-- TODO -->
 
-             <div>
-                 <?php
-                 $referrer = "utm_source=TrashAppWebsite";
-                 if(isset($_GET["utm_medium"])){
-                     $referrer.="&utm_medium=".$_GET["utm_medium"];
-                 }
-                 if (isset($_GET["utm_campaign"])) {
-                     $referrer.="&utm_campaign=".$_GET["utm_campaign"];
-                 }
-                 $referrer = urlencode($referrer);
-                 ?>
-                 <a href='https://play.google.com/store/apps/details?id=org.inventivetalent.trashapp&utm_source=TrashAppWebsite&referrer=<?php echo $referrer; ?>'>
-                     <img class="store-button" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/>
-                 </a>
-                 <br/>
-                 <span class="drop-shadow disclaimer">Google Play and the Google Play logo are trademarks of Google LLC.</span>
-             </div>
+                <div>
+                    <?php
+                    $referrer = "utm_source=TrashAppWebsite";
+                    if (isset($_GET["utm_medium"])) {
+                        $referrer .= "&utm_medium=" . $_GET["utm_medium"];
+                    }
+                    if (isset($_GET["utm_campaign"])) {
+                        $referrer .= "&utm_campaign=" . $_GET["utm_campaign"];
+                    }
+                    $referrer = urlencode($referrer);
+                    ?>
+                    <a href='https://play.google.com/store/apps/details?id=org.inventivetalent.trashapp&utm_source=TrashAppWebsite&utm_medium=<?php echo isset($_GET["utm_medium"]) ?$_GET["utm_medium"] :"web"; ?>&utm_campaign=<?php echo isset( $_GET["utm_campaign"] ) ? $_GET["utm_campaign"] :"none"; ?>&referrer=<?php echo $referrer; ?>'>
+                        <img class="store-button" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/>
+                    </a>
+                    <br/>
+                    <span class="drop-shadow disclaimer">Google Play and the Google Play logo are trademarks of Google LLC.</span>
+                </div>
 
 
-         </div>
-     </main>
+            </div>
+        </main>
 
         <footer>
             <span class="drop-shadow">Made by <a href="https://inventivetalent.dev?utm_source=TrashAppWeb">inventivetalent</a></span>
@@ -157,12 +158,12 @@
                     }
 
                     let imgSize = "1";
-                    try{
+                    try {
                         let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-                        let networkType = connection.type||connection.effectiveType;
+                        let networkType = connection.type || connection.effectiveType;
                         let networkDownlink = connection.downlink;
                         console.log("Network type: " + networkType);
-                        console.log("Network downlink: "+networkDownlink);
+                        console.log("Network downlink: " + networkDownlink);
 
                         if (networkDownlink < 5) {
                             imgSize = "0,5";
@@ -173,11 +174,11 @@
                         if (networkDownlink < .6) {
                             imgSize = "0,1";
                         }
-                    }catch (e) {
+                    } catch (e) {
                         console.warn("Failed to get network info", e);
                     }
 
-                    let img = "bg_lowres" + imgRotationSuffix +"@"+imgSize + "x.jpg";
+                    let img = "bg_lowres" + imgRotationSuffix + "@" + imgSize + "x.jpg";
                     console.log(img);
                     $("body").css("background-image", "url(img/" + img + ")");
                 }
