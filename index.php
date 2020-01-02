@@ -45,6 +45,7 @@
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha256-2YQRJMXD7pIAPHiXr0s+vlRWA7GYJEK0ARns7k2sbHY=" crossorigin="anonymous"/>
         <link href="https://fonts.googleapis.com/css?family=Work+Sans:600,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/smart-app-banner@2.0.0/dist/smart-app-banner.css" integrity="sha256-ZWgnPp0lehkzJCHXpRmzrg+KVk52rKn2A+hIUh80Hbc=" crossorigin="anonymous">
         <style>
             html, body {
                 font-family: 'Work Sans', sans-serif;
@@ -191,6 +192,26 @@
                     setBackgroundImage();
                 })
             })
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/smart-app-banner@2.0.0/dist/smart-app-banner.js" integrity="sha256-xgu0qz3d7dSvtsFvjMuJ9s/bZnYBTaGGaTGKFfZ+HKQ=" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            new SmartBanner({
+                daysHidden: 15,   // days to hide banner after close button is clicked (defaults to 15)
+                daysReminder: 90, // days to hide banner after "VIEW" button is clicked (defaults to 90)
+                appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
+                title: 'TrashApp',
+                author: 'inventivetalent',
+                button: 'VIEW',
+                store: {
+                    android: 'On Google Play',
+                },
+                price: {
+                    ios: 'FREE',
+                    android: 'FREE',
+                    windows: 'FREE'
+                },
+                icon: 'https://trashapp.cc/img/icon-x512.png'
+            });
         </script>
     </body>
 </html>
