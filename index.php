@@ -71,7 +71,7 @@
 
             footer {
                 font-size: 2rem;
-                position: absolute;
+                /*position: absolute;*/
                 /*left: 10px;*/
                 bottom: 10px;
                 width: 100%;
@@ -83,11 +83,11 @@
             }
 
             h1 {
-                font-size: 12rem;
+                font-size: 6rem;
             }
 
             h2 {
-                font-size: 6rem;
+                font-size: 4rem;
             }
 
             body {
@@ -96,6 +96,31 @@
 
                 background-size: 150%;
             }
+
+            @media (min-width: 400px){
+                h1 {
+                    font-size: 7rem;
+                }
+                h2 {
+                    font-size: 6rem;
+                }
+            }
+
+            @media (min-width: 768px){
+                h1 {
+                    font-size: 12rem;
+                }
+            }
+
+            @media (min-width: 1024px){
+
+            }
+
+            @media (min-width: 1200px){
+
+
+            }
+
         </style>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -140,6 +165,7 @@
         </main>
 
         <footer>
+            <br/>
             <span class="drop-shadow">Made by <a href="https://inventivetalent.dev?utm_source=TrashAppWeb">inventivetalent</a></span>
         </footer>
 
